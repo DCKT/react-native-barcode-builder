@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, ART, Text } from 'react-native';
+import { View, StyleSheet, ART, Text, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 
 import barcodes from 'jsbarcode/src/barcodes';
 
 const { Surface, Shape } = ART;
+
+const { width: screenWidth } = Dimensions.get('screen');
 
 export default class Barcode extends PureComponent {
   static propTypes = {
@@ -26,7 +28,7 @@ export default class Barcode extends PureComponent {
     background: PropTypes.string,
     /* Handle error for invalid barcode of selected format */
     onError: PropTypes.func
-  };
+  }
 
   static defaultProps = {
     value: undefined,
@@ -38,7 +40,7 @@ export default class Barcode extends PureComponent {
     textColor: '#000000',
     background: '#ffffff',
     onError: undefined
-  };
+  }
 
   constructor(props) {
     super(props);
@@ -133,7 +135,7 @@ export default class Barcode extends PureComponent {
       encoder = new Encoder(text, options);
     } catch (error) {
       // If the encoder could not be instantiated, throw error.
-      if (this.props.onError)  {
+      if (this.props.onError) {
         this.props.onError(new Error('Invalid barcode format.'));
         return;
       } else {
@@ -171,9 +173,14 @@ export default class Barcode extends PureComponent {
         <Surface height={this.props.height} width={this.state.barCodeWidth}>
           <Shape d={this.state.bars} fill={this.props.lineColor} />
         </Surface>
-        { typeof(this.props.text) != 'undefined' &&
-          <Text style={{color: this.props.textColor, width: this.state.barCodeWidth, textAlign: 'center'}} >{this.props.text}</Text>
-        }
+        {typeof this.props.text != 'undefined' && (
+          <Text style={{ color: this.props.textColor, width: this.state.barCodeWidth, textAlign: 'center' }}>
+            {this.props.text}
+          </Text>
+        )}
+        {this.state.barCodeWidth > screenWidth ? (
+          <Text style={{ marginVertical: 5 }}>The barcode width is bigger than the screen</Text>
+        ) : null}
       </View>
     );
   }
