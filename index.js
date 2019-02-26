@@ -11,7 +11,7 @@ const { width: screenWidth } = Dimensions.get('screen');
 function getRatio(windowWidth, barWidth) {
   const diff = windowWidth - barWidth;
   if (diff < 0) {
-    return (100 + (diff / windowWidth) * 100) / 100;
+    return +(100 + (diff / windowWidth) * 100) / 100;
   } else {
     return 1;
   }
@@ -178,7 +178,7 @@ export default class Barcode extends PureComponent {
       backgroundColor: this.props.background
     };
     const ratio = getRatio(screenWidth, this.state.barCodeWidth);
-    alert(ratio);
+
     return (
       <View style={[styles.svgContainer, backgroundStyle, { transform: [{ scaleX: ratio }, { scaleY: ratio }] }]}>
         <Surface height={this.props.height} width={this.state.barCodeWidth}>
