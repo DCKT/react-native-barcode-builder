@@ -9,7 +9,11 @@ const { Surface, Shape } = ART;
 const { width: screenWidth } = Dimensions.get('screen');
 
 function getRatio(windowWidth, barWidth) {
-  return (windowWidth * 0.95) / barWidth;
+  if (windowWidth - barWidth < 0) {
+    return (windowWidth * 0.95) / barWidth;
+  } else {
+    return 1;
+  }
 }
 
 export default class Barcode extends PureComponent {
@@ -75,6 +79,15 @@ export default class Barcode extends PureComponent {
     if (encoded) {
       this.state.bars = this.drawSvgBarCode(encoded, this.props);
       this.state.barCodeWidth = encoded.data.length * this.props.width;
+
+      if (getRatio(screenWidth, this.state.barCodeWidth) < 0.5) {
+        if (this.props.onError) {
+          this.props.onError(new Error('value_too_long'));
+          return;
+        } else {
+          throw new Error('Minimum ratio error');
+        }
+      }
     }
   }
 
@@ -186,9 +199,6 @@ export default class Barcode extends PureComponent {
             </Text>
           )}
         </View>
-        {ratio < 0.5 ? (
-          <Text style={{ textAlign: 'center', marginVertical: 5 }}>{this.props.ratioTextError}</Text>
-        ) : null}
       </React.Fragment>
     );
   }
