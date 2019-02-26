@@ -178,19 +178,21 @@ export default class Barcode extends PureComponent {
       backgroundColor: this.props.background
     };
     const ratio = getRatio(screenWidth, this.state.barCodeWidth);
-    alert(ratio);
+
     return (
-      <View style={[styles.svgContainer, backgroundStyle, { transform: [{ scaleX: ratio }, { scaleY: ratio }] }]}>
-        <Surface height={this.props.height} width={this.state.barCodeWidth}>
-          <Shape d={this.state.bars} fill={this.props.lineColor} />
-        </Surface>
-        {typeof this.props.text != 'undefined' && (
-          <Text style={{ color: this.props.textColor, width: this.state.barCodeWidth, textAlign: 'center' }}>
-            {this.props.text}
-          </Text>
-        )}
+      <React.Fragment>
+        <View style={[styles.svgContainer, backgroundStyle, { transform: [{ scaleX: 0.5 }, { scaleY: 0.5 }] }]}>
+          <Surface height={this.props.height} width={this.state.barCodeWidth}>
+            <Shape d={this.state.bars} fill={this.props.lineColor} />
+          </Surface>
+          {typeof this.props.text != 'undefined' && (
+            <Text style={{ color: this.props.textColor, width: this.state.barCodeWidth, textAlign: 'center' }}>
+              {this.props.text}
+            </Text>
+          )}
+        </View>
         {ratio < 0.5 ? <Text style={{ marginVertical: 5 }}>{this.props.ratioTextError}</Text> : null}
-      </View>
+      </React.Fragment>
     );
   }
 }
