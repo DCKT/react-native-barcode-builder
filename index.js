@@ -11,7 +11,7 @@ const { width: screenWidth } = Dimensions.get('screen');
 function getRatio(windowWidth, barWidth) {
   const diff = windowWidth - barWidth;
   if (diff < 0) {
-    return +((100 + (diff / windowWidth) * 100) / 100) - 0.03;
+    return (100 - (Math.abs(diff) / windowWidth) * 100) / 100;
   } else {
     return 1;
   }
