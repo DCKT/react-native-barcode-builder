@@ -9,12 +9,7 @@ const { Surface, Shape } = ART;
 const { width: screenWidth } = Dimensions.get('screen');
 
 function getRatio(windowWidth, barWidth) {
-  const diff = windowWidth - barWidth;
-  if (diff < 0) {
-    return (100 - (Math.abs(diff) / windowWidth) * 100) / 100;
-  } else {
-    return 1;
-  }
+  return (windowWidth * 0.95) / barWidth;
 }
 
 export default class Barcode extends PureComponent {
@@ -178,10 +173,10 @@ export default class Barcode extends PureComponent {
       backgroundColor: this.props.background
     };
     const ratio = getRatio(screenWidth, this.state.barCodeWidth);
-    alert(`${screenWidth} ${this.state.barCodeWidth}`);
+
     return (
       <React.Fragment>
-        <View style={[styles.svgContainer, backgroundStyle, { transform: [{ scaleX: 0.5 }, { scaleY: 0.5 }] }]}>
+        <View style={[styles.svgContainer, backgroundStyle, { transform: [{ scaleX: ratio }, { scaleY: ratio }] }]}>
           <Surface height={this.props.height} width={this.state.barCodeWidth}>
             <Shape d={this.state.bars} fill={this.props.lineColor} />
           </Surface>
