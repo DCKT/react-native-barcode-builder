@@ -9,6 +9,7 @@ const { Surface, Shape } = ART;
 const { width: screenWidth } = Dimensions.get('screen');
 
 function getRatio(windowWidth, barWidth) {
+  alert(windowWidth);
   if (windowWidth - barWidth < 0) {
     return (windowWidth * 0.95) / barWidth;
   } else {
