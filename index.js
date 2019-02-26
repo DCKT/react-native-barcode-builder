@@ -6,10 +6,8 @@ import barcodes from 'jsbarcode/src/barcodes';
 
 const { Surface, Shape } = ART;
 
-const { width: screenWidth } = Dimensions.get('screen');
-
-function getRatio(windowWidth, barWidth) {
-  alert(windowWidth);
+function getRatio(barWidth) {
+  const windowWidth = Dimensions.get('screen').width;
   if (windowWidth - barWidth < 0) {
     return (windowWidth * 0.95) / barWidth;
   } else {
@@ -72,7 +70,7 @@ export default class Barcode extends PureComponent {
   componentDidUpdate() {
     this.update();
 
-    if (getRatio(screenWidth, this.state.barCodeWidth) < 0.5) {
+    if (getRatio(this.state.barCodeWidth) < 0.5) {
       if (this.props.onError) {
         this.props.onError(new Error('value_too_long'));
       } else {
@@ -185,7 +183,7 @@ export default class Barcode extends PureComponent {
     const backgroundStyle = {
       backgroundColor: this.props.background
     };
-    const ratio = getRatio(screenWidth, this.state.barCodeWidth);
+    const ratio = getRatio(this.state.barCodeWidth);
 
     return (
       <React.Fragment>
