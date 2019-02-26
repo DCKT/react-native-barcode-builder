@@ -8,6 +8,15 @@ const { Surface, Shape } = ART;
 
 const { width: screenWidth } = Dimensions.get('screen');
 
+function getRatio(windowWidth, barWidth) {
+  const diff = windowWidth - barWidth;
+  if (diff < 0) {
+    return (100 + (diff / windowWidth) * 100) / 100;
+  } else {
+    return 1;
+  }
+}
+
 export default class Barcode extends PureComponent {
   static propTypes = {
     /* what the barCode stands for */
@@ -168,8 +177,10 @@ export default class Barcode extends PureComponent {
     const backgroundStyle = {
       backgroundColor: this.props.background
     };
+    const ratio = getRatio(screenWidth, this.state.barCodeWidth);
+
     return (
-      <View style={[styles.svgContainer, backgroundStyle]}>
+      <View style={[styles.svgContainer, backgroundStyle, { transform: [{ scaleX: ratio }, { scaleY: ratio }] }]}>
         <Surface height={this.props.height} width={this.state.barCodeWidth}>
           <Shape d={this.state.bars} fill={this.props.lineColor} />
         </Surface>
@@ -178,9 +189,7 @@ export default class Barcode extends PureComponent {
             {this.props.text}
           </Text>
         )}
-        {this.state.barCodeWidth > screenWidth ? (
-          <Text style={{ marginVertical: 5 }}>The barcode width is bigger than the screen</Text>
-        ) : null}
+        {ratio < 0.5 ? <Text style={{ marginVertical: 5 }}>{this.props.ratioTextError}</Text> : null}
       </View>
     );
   }
