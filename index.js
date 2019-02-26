@@ -3,6 +3,7 @@ import { View, StyleSheet, ART, Text, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 
 import barcodes from 'jsbarcode/src/barcodes';
+import console = require('console');
 
 const { Surface, Shape } = ART;
 
@@ -178,7 +179,7 @@ export default class Barcode extends PureComponent {
       backgroundColor: this.props.background
     };
     const ratio = getRatio(screenWidth, this.state.barCodeWidth);
-
+    alert(ratio)
     return (
       <View style={[styles.svgContainer, backgroundStyle, { transform: [{ scaleX: ratio }, { scaleY: ratio }] }]}>
         <Surface height={this.props.height} width={this.state.barCodeWidth}>
