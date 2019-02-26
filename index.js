@@ -70,6 +70,14 @@ export default class Barcode extends PureComponent {
 
   componentDidUpdate() {
     this.update();
+
+    if (getRatio(screenWidth, this.state.barCodeWidth) < 0.5) {
+      if (this.props.onError) {
+        this.props.onError(new Error('value_too_long'));
+      } else {
+        throw new Error('Minimum ratio error');
+      }
+    }
   }
 
   update() {
@@ -79,15 +87,6 @@ export default class Barcode extends PureComponent {
     if (encoded) {
       this.state.bars = this.drawSvgBarCode(encoded, this.props);
       this.state.barCodeWidth = encoded.data.length * this.props.width;
-
-      if (getRatio(screenWidth, this.state.barCodeWidth) < 0.5) {
-        if (this.props.onError) {
-          this.props.onError(new Error('value_too_long'));
-          return;
-        } else {
-          throw new Error('Minimum ratio error');
-        }
-      }
     }
   }
 
