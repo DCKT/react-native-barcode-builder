@@ -84,15 +84,14 @@ export default class Barcode extends PureComponent {
     const encoded = this.encode(this.props.value, encoder, this.props);
 
     if (encoded) {
-      this.state.bars = this.drawSvgBarCode(encoded, this.props);
-      this.state.barCodeWidth = encoded.data.length * this.props.width;
+      const data = Array.isArray(encoded) ? encoded.reduce((acc, { data }) => acc + data, '') : encoded.data;
+      this.state.bars = this.drawSvgBarCode(data, this.props);
+      this.state.barCodeWidth = data.length * this.props.width;
     }
   }
 
-  drawSvgBarCode(encoding, options = {}) {
+  drawSvgBarCode(binary, options = {}) {
     const rects = [];
-    // binary data of barcode
-    const binary = encoding.data;
 
     let barWidth = 0;
     let x = 0;
@@ -129,14 +128,6 @@ export default class Barcode extends PureComponent {
 
   drawRect(x, y, width, height) {
     return `M${x},${y}h${width}v${height}h-${width}z`;
-  }
-
-  getTotalWidthOfEncodings(encodings) {
-    let totalWidth = 0;
-    for (let i = 0; i < encodings.length; i++) {
-      totalWidth += encodings[i].width;
-    }
-    return totalWidth;
   }
 
   // encode() handles the Encoder call and builds the binary string to be rendered
@@ -191,7 +182,7 @@ export default class Barcode extends PureComponent {
           <Surface height={this.props.height} width={this.state.barCodeWidth}>
             <Shape d={this.state.bars} fill={this.props.lineColor} />
           </Surface>
-          {typeof this.props.text != 'undefined' && (
+          {typeof this.props.text !== 'undefined' && (
             <Text style={{ color: this.props.textColor, width: this.state.barCodeWidth, textAlign: 'center' }}>
               {this.props.text}
             </Text>
